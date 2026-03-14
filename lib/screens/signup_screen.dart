@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ruh_care/services/auth_service.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -13,8 +15,11 @@ class _SignupScreenState extends State<SignupScreen>
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _authService = AuthService();
+  
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  bool _isLoading = false;
 
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
@@ -41,6 +46,61 @@ class _SignupScreenState extends State<SignupScreen>
     _confirmPasswordController.dispose();
     _fadeController.dispose();
     super.dispose();
+  }
+
+  void _handleSignUp() async {
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
+
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match')),
+      );
+      return;
+    }
+
+    if (password.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password must be at least 6 characters')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      await _authService.signUp(
+        email: email,
+        password: password,
+        fullName: name,
+      );
+      if (mounted) {
+        Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+      }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? 'Signup failed')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('An unexpected error occurred')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -132,18 +192,20 @@ class _SignupScreenState extends State<SignupScreen>
                   controller: _nameController,
                   hint: 'Enter your full name',
                   icon: Icons.person_outline,
+                  enabled: !_isLoading,
                 ),
 
                 const SizedBox(height: 20),
 
                 // Email
-                _buildLabel('Email or Phone Number'),
+                _buildLabel('Email Address'),
                 const SizedBox(height: 10),
                 _buildTextField(
                   controller: _emailController,
-                  hint: 'Enter your email or phone',
+                  hint: 'Enter your email',
                   icon: Icons.email_outlined,
                   keyboardType: TextInputType.emailAddress,
+                  enabled: !_isLoading,
                 ),
 
                 const SizedBox(height: 20),
@@ -155,6 +217,7 @@ class _SignupScreenState extends State<SignupScreen>
                   controller: _passwordController,
                   hint: 'Create a password',
                   obscure: _obscurePassword,
+                  enabled: !_isLoading,
                   onToggle: () => setState(() => _obscurePassword = !_obscurePassword),
                 ),
 
@@ -167,6 +230,7 @@ class _SignupScreenState extends State<SignupScreen>
                   controller: _confirmPasswordController,
                   hint: 'Confirm your password',
                   obscure: _obscureConfirmPassword,
+                  enabled: !_isLoading,
                   onToggle: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
                 ),
 
@@ -176,9 +240,7 @@ class _SignupScreenState extends State<SignupScreen>
                 SizedBox(
                   height: 54,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('/home');
-                    },
+                    onPressed: _isLoading ? null : _handleSignUp,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF6B7B3A),
                       foregroundColor: Colors.white,
@@ -191,10 +253,31 @@ class _SignupScreenState extends State<SignupScreen>
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.5,
                       ),
+                    ).copyWith(
+                      backgroundColor: WidgetStateProperty.resolveWith<Color?>(
+                        (states) {
+                          if (states.contains(WidgetState.disabled)) {
+                            return const Color(0xFF6B7B3A).withValues(alpha: 0.6);
+                          }
+                          return const Color(0xFF6B7B3A);
+                        },
+                      ),
                     ),
-                    child: const Text('Create Account'),
+
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              strokeWidth: 2.5,
+                            ),
+
+                          )
+                        : const Text('Create Account'),
                   ),
                 ),
+
 
                 const SizedBox(height: 28),
 
@@ -321,17 +404,19 @@ class _SignupScreenState extends State<SignupScreen>
     required String hint,
     required IconData icon,
     TextInputType keyboardType = TextInputType.text,
+    bool enabled = true,
   }) {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
+      enabled: enabled,
       style: const TextStyle(fontSize: 15, color: Color(0xFF2D3436)),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(fontSize: 14, color: const Color(0xFF2D3436).withAlpha(100)),
-        prefixIcon: Icon(icon, color: const Color(0xFF6B7B3A).withAlpha(160), size: 22),
+        hintStyle: TextStyle(fontSize: 14, color: const Color(0xFF2D3436).withValues(alpha: 0.4)),
+        prefixIcon: Icon(icon, color: const Color(0xFF6B7B3A).withValues(alpha: 0.6), size: 22),
         filled: true,
-        fillColor: const Color(0xFFF8F8F6),
+        fillColor: enabled ? const Color(0xFFF8F8F6) : const Color(0xFFF0F0F0),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -340,6 +425,10 @@ class _SignupScreenState extends State<SignupScreen>
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: Color(0xFFE4E4E0)),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFFF0F0F0)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -354,25 +443,27 @@ class _SignupScreenState extends State<SignupScreen>
     required String hint,
     required bool obscure,
     required VoidCallback onToggle,
+    bool enabled = true,
   }) {
     return TextField(
       controller: controller,
       obscureText: obscure,
+      enabled: enabled,
       style: const TextStyle(fontSize: 15, color: Color(0xFF2D3436)),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(fontSize: 14, color: const Color(0xFF2D3436).withAlpha(100)),
-        prefixIcon: Icon(Icons.lock_outline, color: const Color(0xFF6B7B3A).withAlpha(160), size: 22),
+        hintStyle: TextStyle(fontSize: 14, color: const Color(0xFF2D3436).withValues(alpha: 0.4)),
+        prefixIcon: Icon(Icons.lock_outline, color: const Color(0xFF6B7B3A).withValues(alpha: 0.6), size: 22),
         suffixIcon: IconButton(
           icon: Icon(
             obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
             color: const Color(0xFF9E9E9E),
             size: 22,
           ),
-          onPressed: onToggle,
+          onPressed: enabled ? onToggle : null,
         ),
         filled: true,
-        fillColor: const Color(0xFFF8F8F6),
+        fillColor: enabled ? const Color(0xFFF8F8F6) : const Color(0xFFF0F0F0),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -382,6 +473,10 @@ class _SignupScreenState extends State<SignupScreen>
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: Color(0xFFE4E4E0)),
         ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFFF0F0F0)),
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: Color(0xFF6B7B3A), width: 1.5),
@@ -390,3 +485,4 @@ class _SignupScreenState extends State<SignupScreen>
     );
   }
 }
+

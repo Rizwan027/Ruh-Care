@@ -1,7 +1,30 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ruh_care/services/auth_service.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final _authService = AuthService();
+  late User? _user;
+
+  @override
+  void initState() {
+    super.initState();
+    _user = _authService.currentUser;
+  }
+
+  void _handleSignOut() async {
+    await _authService.signOut();
+    if (mounted) {
+      Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +49,14 @@ class ProfileScreen extends StatelessWidget {
                 child: const Icon(Icons.person, size: 42, color: Color(0xFF6B7B3A)),
               ),
               const SizedBox(height: 14),
-              const Text(
-                'Sarah Ahmed',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Color(0xFF2D3436)),
+              Text(
+                _user?.displayName ?? 'Valued User',
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Color(0xFF2D3436)),
               ),
               const SizedBox(height: 4),
-              const Text(
-                'sarah.ahmed@email.com',
-                style: TextStyle(fontSize: 13, color: Color(0xFF8A8A8A)),
+              Text(
+                _user?.email ?? 'No email provided',
+                style: const TextStyle(fontSize: 13, color: Color(0xFF8A8A8A)),
               ),
 
               const SizedBox(height: 30),
@@ -65,9 +88,7 @@ class ProfileScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 50,
                 child: OutlinedButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/login');
-                  },
+                  onPressed: _handleSignOut,
                   icon: const Icon(Icons.logout, size: 20),
                   label: const Text('Sign Out', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                   style: OutlinedButton.styleFrom(
@@ -84,6 +105,7 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
+
 
   static Widget _buildSection(String title, List<Widget> items) {
     return Column(

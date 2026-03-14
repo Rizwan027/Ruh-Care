@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "236382410092",
+    "project_id": "ruh-care-5c901",
+    "storage_bucket": "ruh-care-5c901.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236382410092:android:da9abf8ada26d0f764cf49",
+        "android_client_info": {
+          "package_name": "com.example.ruh_care"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1OzZdk-lWyMuCA0dUGMsdIlq_uvGp5yU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ruh_care/screens/signup_screen.dart';
+import 'package:ruh_care/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,7 +14,10 @@ class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _authService = AuthService();
+  
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
@@ -37,6 +42,46 @@ class _LoginScreenState extends State<LoginScreen>
     _passwordController.dispose();
     _fadeController.dispose();
     super.dispose();
+  }
+
+  void _handleSignIn() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      await _authService.signIn(email: email, password: password);
+      if (mounted) {
+        Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+      }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        String message = 'Login failed';
+        if (e.code == 'user-not-found') message = 'No user found for that email';
+        if (e.code == 'wrong-password') message = 'Wrong password provided';
+        if (e.code == 'invalid-email') message = 'Invalid email address';
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? message)),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('An unexpected error occurred')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -124,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen>
 
                 // Email / Phone label
                 const Text(
-                  'Email or Phone Number',
+                  'Email Address',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -136,21 +181,22 @@ class _LoginScreenState extends State<LoginScreen>
                 // Email input
                 TextField(
                   controller: _emailController,
+                  enabled: !_isLoading,
                   keyboardType: TextInputType.emailAddress,
                   style: const TextStyle(fontSize: 15, color: Color(0xFF2D3436)),
                   decoration: InputDecoration(
-                    hintText: 'Enter your email or phone',
+                    hintText: 'Enter your email',
                     hintStyle: TextStyle(
                       fontSize: 14,
-                      color: const Color(0xFF2D3436).withAlpha(100),
+                      color: const Color(0xFF2D3436).withValues(alpha: 0.4),
                     ),
                     prefixIcon: Icon(
                       Icons.person_outline,
-                      color: const Color(0xFF6B7B3A).withAlpha(160),
+                      color: const Color(0xFF6B7B3A).withValues(alpha: 0.6),
                       size: 22,
                     ),
                     filled: true,
-                    fillColor: const Color(0xFFF8F8F6),
+                    fillColor: _isLoading ? const Color(0xFFF0F0F0) : const Color(0xFFF8F8F6),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -159,6 +205,10 @@ class _LoginScreenState extends State<LoginScreen>
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
                       borderSide: const BorderSide(color: Color(0xFFE4E4E0)),
+                    ),
+                    disabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: const BorderSide(color: Color(0xFFF0F0F0)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -184,16 +234,17 @@ class _LoginScreenState extends State<LoginScreen>
                 TextField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
+                  enabled: !_isLoading,
                   style: const TextStyle(fontSize: 15, color: Color(0xFF2D3436)),
                   decoration: InputDecoration(
                     hintText: 'Enter your password',
                     hintStyle: TextStyle(
                       fontSize: 14,
-                      color: const Color(0xFF2D3436).withAlpha(100),
+                      color: const Color(0xFF2D3436).withValues(alpha: 0.4),
                     ),
                     prefixIcon: Icon(
                       Icons.lock_outline,
-                      color: const Color(0xFF6B7B3A).withAlpha(160),
+                      color: const Color(0xFF6B7B3A).withValues(alpha: 0.6),
                       size: 22,
                     ),
                     suffixIcon: IconButton(
@@ -202,14 +253,14 @@ class _LoginScreenState extends State<LoginScreen>
                         color: const Color(0xFF9E9E9E),
                         size: 22,
                       ),
-                      onPressed: () {
+                      onPressed: _isLoading ? null : () {
                         setState(() {
                           _obscurePassword = !_obscurePassword;
                         });
                       },
                     ),
                     filled: true,
-                    fillColor: const Color(0xFFF8F8F6),
+                    fillColor: _isLoading ? const Color(0xFFF0F0F0) : const Color(0xFFF8F8F6),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -218,6 +269,10 @@ class _LoginScreenState extends State<LoginScreen>
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
                       borderSide: const BorderSide(color: Color(0xFFE4E4E0)),
+                    ),
+                    disabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: const BorderSide(color: Color(0xFFF0F0F0)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -232,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen>
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {
+                    onPressed: _isLoading ? null : () {
                       // TODO: Forgot password flow
                     },
                     style: TextButton.styleFrom(
@@ -257,9 +312,7 @@ class _LoginScreenState extends State<LoginScreen>
                 SizedBox(
                   height: 54,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('/home');
-                    },
+                    onPressed: _isLoading ? null : _handleSignIn,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF6B7B3A),
                       foregroundColor: Colors.white,
@@ -272,10 +325,31 @@ class _LoginScreenState extends State<LoginScreen>
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.5,
                       ),
+                    ).copyWith(
+                      backgroundColor: WidgetStateProperty.resolveWith<Color?>(
+                        (states) {
+                          if (states.contains(WidgetState.disabled)) {
+                            return const Color(0xFF6B7B3A).withValues(alpha: 0.6);
+                          }
+                          return const Color(0xFF6B7B3A);
+                        },
+                      ),
                     ),
-                    child: const Text('Sign In'),
+
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              strokeWidth: 2.5,
+                            ),
+
+                          )
+                        : const Text('Sign In'),
                   ),
                 ),
+
 
                 const SizedBox(height: 28),
 

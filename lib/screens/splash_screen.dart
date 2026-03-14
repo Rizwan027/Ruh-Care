@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ruh_care/services/auth_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,6 +14,7 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _fadeAnimation;
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
+  final _authService = AuthService();
 
   @override
   void initState() {
@@ -44,13 +46,18 @@ class _SplashScreenState extends State<SplashScreen>
       if (mounted) _progressController.forward();
     });
 
-    // Navigate to home after splash duration
+    // Navigate based on auth state after splash duration
     Future.delayed(const Duration(milliseconds: 3500), () {
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/login');
+        if (_authService.currentUser != null) {
+          Navigator.of(context).pushReplacementNamed('/home');
+        } else {
+          Navigator.of(context).pushReplacementNamed('/login');
+        }
       }
     });
   }
+
 
   @override
   void dispose() {
