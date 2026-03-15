@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ruh_care/models/therapy.dart';
 import 'package:ruh_care/services/therapy_service.dart';
+import 'package:ruh_care/screens/therapy_detail_screen.dart';
 
 class TherapiesScreen extends StatefulWidget {
   const TherapiesScreen({super.key});
@@ -236,7 +237,7 @@ class _TherapiesScreenState extends State<TherapiesScreen> {
                             ),
                           ),
                           Text(
-                            '\$${therapy.price.toInt()}',
+                            '₹${therapy.price.toInt()}',
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -303,7 +304,12 @@ class _TherapiesScreenState extends State<TherapiesScreen> {
               height: 48,
               child: ElevatedButton(
                 onPressed: () {
-                  // TODO: Navigate to booking screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TherapyDetailScreen(therapy: therapy),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6B7B3A),

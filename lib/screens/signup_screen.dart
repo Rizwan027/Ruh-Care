@@ -16,7 +16,7 @@ class _SignupScreenState extends State<SignupScreen>
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _authService = AuthService();
-  
+
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _isLoading = false;
@@ -62,9 +62,9 @@ class _SignupScreenState extends State<SignupScreen>
     }
 
     if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Passwords do not match')));
       return;
     }
 
@@ -84,13 +84,15 @@ class _SignupScreenState extends State<SignupScreen>
         fullName: name,
       );
       if (mounted) {
-        Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+        Navigator.of(
+          context,
+        ).pushNamedAndRemoveUntil('/home', (route) => false);
       }
     } on FirebaseAuthException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'Signup failed')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message ?? 'Signup failed')));
       }
     } catch (e) {
       if (mounted) {
@@ -122,7 +124,11 @@ class _SignupScreenState extends State<SignupScreen>
                   children: [
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: Color(0xFF2D3436)),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        size: 20,
+                        color: Color(0xFF2D3436),
+                      ),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
@@ -151,9 +157,16 @@ class _SignupScreenState extends State<SignupScreen>
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: const Color(0xFFF1F3EC),
-                      border: Border.all(color: const Color(0xFFE4E8D8), width: 1.5),
+                      border: Border.all(
+                        color: const Color(0xFFE4E8D8),
+                        width: 1.5,
+                      ),
                     ),
-                    child: const Icon(Icons.person_add_alt_1_outlined, size: 28, color: Color(0xFF6B7B3A)),
+                    child: const Icon(
+                      Icons.person_add_alt_1_outlined,
+                      size: 28,
+                      color: Color(0xFF6B7B3A),
+                    ),
                   ),
                 ),
 
@@ -218,7 +231,8 @@ class _SignupScreenState extends State<SignupScreen>
                   hint: 'Create a password',
                   obscure: _obscurePassword,
                   enabled: !_isLoading,
-                  onToggle: () => setState(() => _obscurePassword = !_obscurePassword),
+                  onToggle: () =>
+                      setState(() => _obscurePassword = !_obscurePassword),
                 ),
 
                 const SizedBox(height: 20),
@@ -231,7 +245,9 @@ class _SignupScreenState extends State<SignupScreen>
                   hint: 'Confirm your password',
                   obscure: _obscureConfirmPassword,
                   enabled: !_isLoading,
-                  onToggle: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                  onToggle: () => setState(
+                    () => _obscureConfirmPassword = !_obscureConfirmPassword,
+                  ),
                 ),
 
                 const SizedBox(height: 30),
@@ -241,50 +257,56 @@ class _SignupScreenState extends State<SignupScreen>
                   height: 54,
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _handleSignUp,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6B7B3A),
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.5,
-                      ),
-                    ).copyWith(
-                      backgroundColor: WidgetStateProperty.resolveWith<Color?>(
-                        (states) {
-                          if (states.contains(WidgetState.disabled)) {
-                            return const Color(0xFF6B7B3A).withValues(alpha: 0.6);
-                          }
-                          return const Color(0xFF6B7B3A);
-                        },
-                      ),
-                    ),
+                    style:
+                        ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF6B7B3A),
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.5,
+                          ),
+                        ).copyWith(
+                          backgroundColor:
+                              WidgetStateProperty.resolveWith<Color?>((states) {
+                                if (states.contains(WidgetState.disabled)) {
+                                  return const Color(
+                                    0xFF6B7B3A,
+                                  ).withValues(alpha: 0.6);
+                                }
+                                return const Color(0xFF6B7B3A);
+                              }),
+                        ),
 
                     child: _isLoading
                         ? const SizedBox(
                             width: 24,
                             height: 24,
                             child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
                               strokeWidth: 2.5,
                             ),
-
                           )
                         : const Text('Create Account'),
                   ),
                 ),
-
 
                 const SizedBox(height: 28),
 
                 // "Or continue with" divider
                 Row(
                   children: [
-                    Expanded(child: Divider(color: const Color(0xFFE0E0E0).withAlpha(180))),
+                    Expanded(
+                      child: Divider(
+                        color: const Color(0xFFE0E0E0).withAlpha(180),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
@@ -295,7 +317,11 @@ class _SignupScreenState extends State<SignupScreen>
                         ),
                       ),
                     ),
-                    Expanded(child: Divider(color: const Color(0xFFE0E0E0).withAlpha(180))),
+                    Expanded(
+                      child: Divider(
+                        color: const Color(0xFFE0E0E0).withAlpha(180),
+                      ),
+                    ),
                   ],
                 ),
 
@@ -305,33 +331,93 @@ class _SignupScreenState extends State<SignupScreen>
                 Row(
                   children: [
                     Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () {},
-                        icon: const Text('🔵', style: TextStyle(fontSize: 16)),
-                        label: const Text(
-                          'Google',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF2D3436)),
-                        ),
+                      child: OutlinedButton(
+                        onPressed: () {
+                          // TODO: Google sign in
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Google Sign In - Coming Soon'),
+                            ),
+                          );
+                        },
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           side: const BorderSide(color: Color(0xFFE4E4E0)),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.network(
+                              'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg',
+                              height: 20,
+                              width: 20,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.g_mobiledata,
+                                  size: 24,
+                                  color: Colors.red,
+                                );
+                              },
+                            ),
+                            const SizedBox(width: 10),
+                            const Text(
+                              'Google',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF2D3436),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () {},
-                        icon: const Text('', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-                        label: const Text(
-                          'Apple',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF2D3436)),
-                        ),
+                      child: OutlinedButton(
+                        onPressed: () {
+                          // TODO: Apple sign in
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Apple Sign In - Coming Soon'),
+                            ),
+                          );
+                        },
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           side: const BorderSide(color: Color(0xFFE4E4E0)),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.network(
+                              'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
+                              height: 20,
+                              width: 20,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.apple,
+                                  size: 24,
+                                  color: Colors.black,
+                                );
+                              },
+                            ),
+                            const SizedBox(width: 10),
+                            const Text(
+                              'Apple',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF2D3436),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -374,7 +460,11 @@ class _SignupScreenState extends State<SignupScreen>
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(2),
                     gradient: const LinearGradient(
-                      colors: [Color(0xFF6B7B3A), Color(0xFF8A9A5B), Color(0xFFB8C98E)],
+                      colors: [
+                        Color(0xFF6B7B3A),
+                        Color(0xFF8A9A5B),
+                        Color(0xFFB8C98E),
+                      ],
                     ),
                   ),
                 ),
@@ -413,11 +503,21 @@ class _SignupScreenState extends State<SignupScreen>
       style: const TextStyle(fontSize: 15, color: Color(0xFF2D3436)),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(fontSize: 14, color: const Color(0xFF2D3436).withValues(alpha: 0.4)),
-        prefixIcon: Icon(icon, color: const Color(0xFF6B7B3A).withValues(alpha: 0.6), size: 22),
+        hintStyle: TextStyle(
+          fontSize: 14,
+          color: const Color(0xFF2D3436).withValues(alpha: 0.4),
+        ),
+        prefixIcon: Icon(
+          icon,
+          color: const Color(0xFF6B7B3A).withValues(alpha: 0.6),
+          size: 22,
+        ),
         filled: true,
         fillColor: enabled ? const Color(0xFFF8F8F6) : const Color(0xFFF0F0F0),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: Color(0xFFE4E4E0)),
@@ -452,8 +552,15 @@ class _SignupScreenState extends State<SignupScreen>
       style: const TextStyle(fontSize: 15, color: Color(0xFF2D3436)),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(fontSize: 14, color: const Color(0xFF2D3436).withValues(alpha: 0.4)),
-        prefixIcon: Icon(Icons.lock_outline, color: const Color(0xFF6B7B3A).withValues(alpha: 0.6), size: 22),
+        hintStyle: TextStyle(
+          fontSize: 14,
+          color: const Color(0xFF2D3436).withValues(alpha: 0.4),
+        ),
+        prefixIcon: Icon(
+          Icons.lock_outline,
+          color: const Color(0xFF6B7B3A).withValues(alpha: 0.6),
+          size: 22,
+        ),
         suffixIcon: IconButton(
           icon: Icon(
             obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
@@ -464,7 +571,10 @@ class _SignupScreenState extends State<SignupScreen>
         ),
         filled: true,
         fillColor: enabled ? const Color(0xFFF8F8F6) : const Color(0xFFF0F0F0),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: Color(0xFFE4E4E0)),
@@ -485,4 +595,3 @@ class _SignupScreenState extends State<SignupScreen>
     );
   }
 }
-
