@@ -3,11 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:ruh_care/screens/login_screen.dart';
 import 'package:ruh_care/screens/main_navigation.dart';
 import 'package:ruh_care/screens/splash_screen.dart';
+import 'firebase_options.dart';
+//import 'package:ruh_care/helpers/sample_data_helper.dart'; // UNCOMMENT TO POPULATE DATA
+//import 'package:ruh_care/helpers/update_therapy_images.dart'; // UNCOMMENT TO ADD IMAGES
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    // UNCOMMENT BELOW TO POPULATE SAMPLE THERAPIES (RUN ONCE ONLY)
+    // await SampleDataHelper().addSampleTherapies();
+    //print('✅ Sample data populated! Comment out this line now.');
+
+    // UNCOMMENT BELOW TO ADD IMAGES TO THERAPIES (RUN ONCE ONLY)
+    // await UpdateTherapyImages().updateTherapyImages();
+    // print('🎉 Images added! Comment out this line now.');
   } catch (e) {
     debugPrint('Firebase initialization error: $e');
     runApp(ErrorApp(error: e.toString()));
