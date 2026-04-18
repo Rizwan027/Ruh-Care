@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ruh_care/helpers/responsive_helper.dart';
 import 'package:ruh_care/models/wellness_data.dart';
 import 'package:ruh_care/screens/notifications_screen.dart';
 
@@ -21,6 +22,8 @@ class PremiumHeroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = Responsive.width(context);
+    
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -33,23 +36,26 @@ class PremiumHeroSection extends StatelessWidget {
             top: -100,
             right: -50,
             child: Container(
-              width: 400,
-              height: 400,
+              width: screenWidth * 0.8,
+              height: screenWidth * 0.8,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    const Color(0xFF2B4236).withValues(alpha: 0.04),
+                    const Color(0xFF2B4236).withAlpha(10),
                     Colors.transparent,
                   ],
                 ),
               ),
             ),
           ),
-          
+
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.06, 
+                vertical: 16
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -66,68 +72,80 @@ class PremiumHeroSection extends StatelessWidget {
                         alignment: Alignment.centerRight,
                         child: _buildNotificationButton(context),
                       ),
-                      
+
                       // Centered Text
                       const Text(
                         'RUH CARE',
                         style: TextStyle(
                           fontSize: 14,
-                          letterSpacing: 6,
+                          letterSpacing: 4, // Reduced slightly for small screens
                           fontWeight: FontWeight.w600,
                           color: Color(0xFF2B4236),
                         ),
                       ),
                     ],
                   ),
-                  
-                  const SizedBox(height: 48),
-                  
+
+                  SizedBox(height: Responsive.ph(context, 5)),
+
                   // Magazine Style Greeting
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _getGreeting(),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontStyle: FontStyle.italic,
-                              color: Color(0xFF6B8E67),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _getGreeting(),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontStyle: FontStyle.italic,
+                                color: Color(0xFF6B8E67),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            userName.split(' ').first,
-                            style: const TextStyle(
-                              fontSize: 48,
-                              fontWeight: FontWeight.w200,
-                              height: 0.9,
-                              color: Color(0xFF2B4236), // New Deep Green
+                            const SizedBox(height: 8),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                userName.split(' ').first,
+                                style: const TextStyle(
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.w200,
+                                  height: 0.9,
+                                  color: Color(0xFF2B4236),
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                      const Spacer(),
+                      const SizedBox(width: 8),
                       // Subtle Streak Badge
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF2B4236).withValues(alpha: 0.2)),
+                          border: Border.all(
+                            color: const Color(0xFF2B4236).withAlpha(51),
+                          ),
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('⚡', style: TextStyle(fontSize: 12)),
+                            const Text('⚡', style: TextStyle(fontSize: 10)),
                             const SizedBox(width: 4),
                             Text(
                               '3 DAY RITUAL',
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 9,
                                 fontWeight: FontWeight.bold,
-                                letterSpacing: 1,
-                                color: const Color(0xFF6B8E67).withValues(alpha: 0.8),
+                                letterSpacing: 0.5,
+                                color: const Color(0xFF6B8E67).withAlpha(204),
                               ),
                             ),
                           ],
@@ -156,10 +174,14 @@ class PremiumHeroSection extends StatelessWidget {
           color: Colors.white,
           shape: BoxShape.circle,
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+            BoxShadow(color: Colors.black.withAlpha(12), blurRadius: 10),
           ],
         ),
-        child: const Icon(Icons.person_outline, size: 20, color: Color(0xFF2B4236)),
+        child: const Icon(
+          Icons.person_outline,
+          size: 20,
+          color: Color(0xFF2B4236),
+        ),
       ),
     );
   }
@@ -179,10 +201,14 @@ class PremiumHeroSection extends StatelessWidget {
           color: Colors.white,
           shape: BoxShape.circle,
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+            BoxShadow(color: Colors.black.withAlpha(12), blurRadius: 10),
           ],
         ),
-        child: const Icon(Icons.notifications_none, size: 20, color: Color(0xFF2B4236)),
+        child: const Icon(
+          Icons.notifications_none,
+          size: 20,
+          color: Color(0xFF2B4236),
+        ),
       ),
     );
   }

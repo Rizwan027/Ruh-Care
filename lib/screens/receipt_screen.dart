@@ -8,7 +8,7 @@ class ReceiptScreen extends StatefulWidget {
   final double? total;
 
   const ReceiptScreen({
-    super.key, 
+    super.key,
     this.paymentMethod = 'Not Specified',
     this.items,
     this.total,
@@ -28,7 +28,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
   void initState() {
     super.initState();
     date = DateFormat('dd MMM yyyy, hh:mm a').format(DateTime.now());
-    
+
     // Use passed items or default to empty
     items = widget.items ?? [];
     total = widget.total ?? 0.0;
@@ -41,7 +41,10 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
       appBar: AppBar(
         title: const Text(
           'Invoice',
-          style: TextStyle(color: Color(0xFF2B4236), fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Color(0xFF2B4236),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -78,18 +81,26 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                   ),
                   elevation: 0,
                 ),
-                child: const Text('Return', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                child: const Text(
+                  'Return',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
               ),
               const SizedBox(height: 16),
               TextButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Bill has been saved to your downloads')),
+                    const SnackBar(
+                      content: Text('Bill has been saved to your downloads'),
+                    ),
                   );
                 },
                 child: const Text(
                   'Download Bill (PDF)',
-                  style: TextStyle(color: Color(0xFF6B8E67), fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Color(0xFF6B8E67),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -107,7 +118,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
         borderRadius: BorderRadius.circular(4),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withAlpha(20),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -141,7 +152,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
             ),
           ),
           const SizedBox(height: 32),
-          
+
           _buildBillRow('Invoice No.', receiptId, isBold: true),
           const SizedBox(height: 6),
           _buildBillRow('Date', date),
@@ -149,7 +160,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
           _buildBillRow('Status', 'PAID', valueColor: Colors.green.shade700),
           const SizedBox(height: 6),
           _buildBillRow('Method', widget.paymentMethod),
-          
+
           const SizedBox(height: 24),
           _buildDashedLine(),
           const SizedBox(height: 24),
@@ -307,10 +318,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
           const Center(
             child: Text(
               'www.ruhcare.com',
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 10, color: Colors.grey),
             ),
           ),
         ],
@@ -318,7 +326,12 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
     );
   }
 
-  Widget _buildBillRow(String label, String value, {bool isBold = false, Color? valueColor}) {
+  Widget _buildBillRow(
+    String label,
+    String value, {
+    bool isBold = false,
+    Color? valueColor,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

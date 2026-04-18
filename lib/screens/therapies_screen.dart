@@ -112,13 +112,17 @@ class _TherapiesScreenState extends State<TherapiesScreen> {
                         'Find your healing practice',
                         style: TextStyle(
                           fontSize: 13,
-                          color: const Color(0xFF2B4236).withOpacity(0.5),
+                          color: const Color(0xFF2B4236).withAlpha(128),
                         ),
                       ),
                     ],
                   ),
                   IconButton(
-                    icon: const Icon(Icons.search, size: 26, color: Color(0xFF2B4236)),
+                    icon: const Icon(
+                      Icons.search,
+                      size: 26,
+                      color: Color(0xFF2B4236),
+                    ),
                     onPressed: () {},
                   ),
                 ],
@@ -157,7 +161,9 @@ class _TherapiesScreenState extends State<TherapiesScreen> {
                         child: Text(
                           category,
                           style: TextStyle(
-                            color: isSelected ? Colors.white : const Color(0xFF2B4236),
+                            color: isSelected
+                                ? Colors.white
+                                : const Color(0xFF2B4236),
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ),
@@ -307,6 +313,8 @@ class _TherapiesScreenState extends State<TherapiesScreen> {
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF2B4236),
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 6),
                       Text(
@@ -320,36 +328,39 @@ class _TherapiesScreenState extends State<TherapiesScreen> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.access_time,
-                            size: 16,
-                            color: Colors.grey[500],
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${therapy.duration} Mins',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Color(0xFF6B8E67),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.access_time,
+                              size: 14,
+                              color: Colors.grey[500],
                             ),
-                          ),
-                          const SizedBox(width: 16),
-                          Icon(
-                            Icons.verified,
-                            size: 16,
-                            color: Colors.grey[500],
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            therapy.tag,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Color(0xFF6B8E67),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${therapy.duration} Mins',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: Color(0xFF6B8E67),
+                              ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 12),
+                            Icon(
+                              Icons.verified,
+                              size: 14,
+                              color: Colors.grey[500],
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              therapy.tag,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: Color(0xFF6B8E67),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -359,7 +370,7 @@ class _TherapiesScreenState extends State<TherapiesScreen> {
                   child: Text(
                     '₹${therapy.price.toInt()}',
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF2B4236),
                     ),

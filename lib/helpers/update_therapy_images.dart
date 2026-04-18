@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class UpdateTherapyImages {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -30,13 +31,13 @@ class UpdateTherapyImages {
         if (therapyImages.containsKey(therapyName)) {
           // Update the imageUrl field
           await doc.reference.update({'imageUrl': therapyImages[therapyName]});
-          print('✅ Updated image for: $therapyName');
+          debugPrint('✅ Updated image for: $therapyName');
         }
       }
 
-      print('🎉 All therapy images updated successfully!');
+      debugPrint('🎉 All therapy images updated successfully!');
     } catch (e) {
-      print('❌ Error updating images: $e');
+      debugPrint('❌ Error updating images: $e');
     }
   }
 }

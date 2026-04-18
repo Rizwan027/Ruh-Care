@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ruh_care/models/product.dart';
 
 class ProductService {
@@ -20,7 +21,7 @@ class ProductService {
       }
       return null;
     } catch (e) {
-      print('Error fetching product: $e');
+      debugPrint('Error fetching product: $e');
       return null;
     }
   }

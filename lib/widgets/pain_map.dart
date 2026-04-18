@@ -52,11 +52,15 @@ class PainMap extends StatelessWidget {
                         height: 350,
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.person_outline, size: 250, color: Colors.grey);
+                          return const Icon(
+                            Icons.person_outline,
+                            size: 250,
+                            color: Colors.grey,
+                          );
                         },
                       ),
                     ),
-                    
+
                     // Touch Targets (Center of image is width 253/2 = 126.5)
                     _buildTarget(area: 'Neck', top: 45, left: 126),
                     _buildTarget(area: 'Shoulders', top: 70, left: 126),
@@ -76,7 +80,9 @@ class PainMap extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
             decoration: BoxDecoration(
-              color: selectedArea == 'Full Body' ? const Color(0xFF6B7B3A) : Colors.white,
+              color: selectedArea == 'Full Body'
+                  ? const Color(0xFF6B7B3A)
+                  : Colors.white,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: const Color(0xFF6B7B3A)),
             ),
@@ -84,11 +90,13 @@ class PainMap extends StatelessWidget {
               'Select Full Body',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: selectedArea == 'Full Body' ? Colors.white : const Color(0xFF6B7B3A),
+                color: selectedArea == 'Full Body'
+                    ? Colors.white
+                    : const Color(0xFF6B7B3A),
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -100,7 +108,7 @@ class PainMap extends StatelessWidget {
   }) {
     final isSelected = selectedArea == area;
     final dotSize = 28.0;
-    
+
     return Positioned(
       top: top - (dotSize / 2),
       left: left - (dotSize / 2),
@@ -116,7 +124,9 @@ class PainMap extends StatelessWidget {
               width: dotSize,
               height: dotSize,
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFF6B7B3A).withOpacity(0.85) : const Color(0xFF6B7B3A).withOpacity(0.15),
+                color: isSelected
+                    ? const Color(0xFF6B7B3A).withAlpha(217)
+                    : const Color(0xFF6B7B3A).withAlpha(38),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: isSelected ? Colors.white : Colors.transparent,
@@ -125,10 +135,10 @@ class PainMap extends StatelessWidget {
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: const Color(0xFF6B7B3A).withOpacity(0.6),
+                          color: const Color(0xFF6B7B3A).withAlpha(153),
                           blurRadius: 15,
                           spreadRadius: 5,
-                        )
+                        ),
                       ]
                     : [],
               ),
@@ -139,7 +149,9 @@ class PainMap extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                color: isSelected ? const Color(0xFF6B7B3A) : const Color(0xFF8A8A8A),
+                color: isSelected
+                    ? const Color(0xFF6B7B3A)
+                    : const Color(0xFF8A8A8A),
               ),
             ),
           ],

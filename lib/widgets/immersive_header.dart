@@ -5,11 +5,7 @@ class ImmersiveHeader extends StatefulWidget {
   final String userName;
   final WellnessData? wellnessData;
 
-  const ImmersiveHeader({
-    super.key,
-    required this.userName,
-    this.wellnessData,
-  });
+  const ImmersiveHeader({super.key, required this.userName, this.wellnessData});
 
   @override
   State<ImmersiveHeader> createState() => _ImmersiveHeaderState();
@@ -56,7 +52,7 @@ class _ImmersiveHeaderState extends State<ImmersiveHeader>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6B7B3A).withOpacity(0.1),
+            color: const Color(0xFF6B7B3A).withAlpha(25),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -80,8 +76,8 @@ class _ImmersiveHeaderState extends State<ImmersiveHeader>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          const Color(0xFF6B7B3A).withOpacity(0.15),
-                          const Color(0xFF6B7B3A).withOpacity(0.0),
+                          const Color(0xFF6B7B3A).withAlpha(38),
+                          const Color(0xFF6B7B3A).withAlpha(0),
                         ],
                       ),
                     ),
@@ -90,7 +86,7 @@ class _ImmersiveHeaderState extends State<ImmersiveHeader>
               },
             ),
           ),
-          
+
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -104,11 +100,16 @@ class _ImmersiveHeaderState extends State<ImmersiveHeader>
                       children: [
                         // Streak Badge
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
-                            color: Colors.orange.withOpacity(0.1),
+                            color: Colors.orange.withAlpha(25),
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                            border: Border.all(
+                              color: Colors.orange.withAlpha(77),
+                            ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -147,7 +148,7 @@ class _ImmersiveHeaderState extends State<ImmersiveHeader>
                       ],
                     ),
                   ),
-                  
+
                   // Wellness Score Circular Indicator
                   const SizedBox(width: 16),
                   Container(
@@ -158,7 +159,7 @@ class _ImmersiveHeaderState extends State<ImmersiveHeader>
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF6B7B3A).withOpacity(0.2),
+                          color: const Color(0xFF6B7B3A).withAlpha(51),
                           blurRadius: 20,
                           spreadRadius: 4,
                           offset: const Offset(0, 8),
@@ -208,12 +209,15 @@ class _ImmersiveHeaderState extends State<ImmersiveHeader>
                 ],
               ),
               const SizedBox(height: 20),
-              
+
               // Micro text insight
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withAlpha(179),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.white),
                 ),
@@ -227,7 +231,8 @@ class _ImmersiveHeaderState extends State<ImmersiveHeader>
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      widget.wellnessData?.insightText ?? "Take your first assessment",
+                      widget.wellnessData?.insightText ??
+                          "Take your first assessment",
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,

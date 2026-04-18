@@ -4,7 +4,7 @@ import 'package:ruh_care/screens/assessment_screen.dart';
 
 class SmartWellnessInsightCard extends StatelessWidget {
   final WellnessData? data;
-  
+
   const SmartWellnessInsightCard({super.key, this.data});
 
   @override
@@ -17,10 +17,13 @@ class SmartWellnessInsightCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: const Color(0xFF6B7B3A).withOpacity(0.1), width: 1.5),
+        border: Border.all(
+          color: const Color(0xFF6B7B3A).withAlpha(25),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6B7B3A).withOpacity(0.08),
+            color: const Color(0xFF6B7B3A).withAlpha(20),
             blurRadius: 30,
             spreadRadius: 2,
             offset: const Offset(0, 15),
@@ -83,11 +86,19 @@ class SmartWellnessInsightCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _buildStatItem('Stress Level', '${data!.stressLevel.toInt()}/10', Icons.psychology),
+                child: _buildStatItem(
+                  'Stress Level',
+                  '${data!.stressLevel.toInt()}/10',
+                  Icons.psychology,
+                ),
               ),
               Container(width: 1, height: 40, color: const Color(0xFFEEEEEE)),
               Expanded(
-                child: _buildStatItem('Pain Level', '${data!.painLevel.toInt()}/10', Icons.healing),
+                child: _buildStatItem(
+                  'Pain Level',
+                  '${data!.painLevel.toInt()}/10',
+                  Icons.healing,
+                ),
               ),
             ],
           ),
@@ -96,22 +107,23 @@ class SmartWellnessInsightCard extends StatelessWidget {
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  const Color(0xFF6B7B3A).withOpacity(0.1),
-                  Colors.white,
-                ],
+                colors: [const Color(0xFF6B7B3A).withAlpha(25), Colors.white],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF6B7B3A).withOpacity(0.2)),
+              border: Border.all(color: const Color(0xFF6B7B3A).withAlpha(51)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: const [
-                    Icon(Icons.lightbulb_outline, size: 16, color: Color(0xFF6B7B3A)),
+                    Icon(
+                      Icons.lightbulb_outline,
+                      size: 16,
+                      color: Color(0xFF6B7B3A),
+                    ),
                     SizedBox(width: 6),
                     Text(
                       'Suggestion',
@@ -125,7 +137,9 @@ class SmartWellnessInsightCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  data!.suggestion.isNotEmpty ? data!.suggestion : 'Take a moment to breathe and stretch.',
+                  data!.suggestion.isNotEmpty
+                      ? data!.suggestion
+                      : 'Take a moment to breathe and stretch.',
                   style: const TextStyle(
                     fontSize: 13,
                     color: Color(0xFF2D3436),
@@ -155,10 +169,7 @@ class SmartWellnessInsightCard extends StatelessWidget {
         ),
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 11,
-            color: Color(0xFF8A8A8A),
-          ),
+          style: const TextStyle(fontSize: 11, color: Color(0xFF8A8A8A)),
         ),
       ],
     );

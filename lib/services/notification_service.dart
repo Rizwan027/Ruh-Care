@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ruh_care/models/app_notification.dart';
 
 class NotificationService {
@@ -8,7 +9,7 @@ class NotificationService {
     try {
       await _firestore.collection('notifications').add(notification.toMap());
     } catch (e) {
-      print('Error creating notification: $e');
+      debugPrint('Error creating notification: $e');
     }
   }
 
@@ -21,7 +22,7 @@ class NotificationService {
           final notifications = snapshot.docs
               .map((doc) => AppNotification.fromFirestore(doc.data(), doc.id))
               .toList();
-              
+
           notifications.sort((a, b) => b.createdAt.compareTo(a.createdAt));
           return notifications;
         });

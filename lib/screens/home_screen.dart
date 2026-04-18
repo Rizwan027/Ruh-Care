@@ -6,18 +6,17 @@ import 'package:ruh_care/services/booking_service.dart';
 import 'package:ruh_care/services/therapy_service.dart';
 import 'package:ruh_care/services/user_service.dart';
 import 'package:ruh_care/screens/main_navigation.dart';
-import 'package:ruh_care/screens/notifications_screen.dart';
 import 'package:ruh_care/widgets/premium_hero_section.dart';
 import 'package:ruh_care/widgets/premium_insight_card.dart';
 import 'package:ruh_care/widgets/premium_upcoming_session.dart';
 import 'package:ruh_care/widgets/body_focus_preview.dart';
-import 'package:ruh_care/widgets/minimal_quick_actions.dart';
 import 'package:ruh_care/widgets/premium_log_data_card.dart';
 import 'package:ruh_care/widgets/wellness_journey_path.dart';
 import 'package:ruh_care/widgets/healing_journey_strip.dart';
 import 'package:ruh_care/models/wellness_data.dart';
 import 'package:ruh_care/services/wellness_service.dart';
 import 'package:ruh_care/screens/assessment_screen.dart';
+import 'package:ruh_care/helpers/responsive_helper.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -56,14 +55,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = Responsive.height(context);
+    
     return Scaffold(
       backgroundColor: const Color(0xFFF1F3EC),
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            // Visual Journey Path (Background)
+            // Visual Journey Path (Background) - Positioned relatively
             Positioned(
-              top: 500,
+              top: screenHeight * 0.6,
               left: 30,
               child: Opacity(
                 opacity: 0.5,
@@ -76,14 +77,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            
+
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _isLoading
-                    ? const SizedBox(
-                        height: 400,
-                        child: Center(child: CircularProgressIndicator(color: Color(0xFF2B4236))),
+                    ? SizedBox(
+                        height: screenHeight * 0.5,
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: Color(0xFF2B4236),
+                          ),
+                        ),
                       )
                     : StreamBuilder<WellnessData?>(
                         stream: _wellnessService.getLatestWellnessData(),
@@ -95,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 userName: _displayName,
                                 wellnessData: wellnessData,
                               ),
-                              
+
                               const SizedBox(height: 20),
 
                               // UPCOMING SESSION (MOVED TO TOP)
@@ -117,13 +122,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(height: 32),
 
                               // Transition 1: Current State
-                              _buildTransitionLabel('LET\'S CHECK YOUR CURRENT STATE'),
+                              _buildTransitionLabel(
+                                'LET\'S CHECK YOUR CURRENT STATE',
+                              ),
 
                               const SizedBox(height: 8),
 
                               // Transition Insight Card (AI Intelligence 2.0)
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 24),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                ),
                                 child: wellnessData == null
                                     ? _buildEmptyAssessmentCTA()
                                     : PremiumInsightCard(data: wellnessData),
@@ -132,14 +141,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
-                
+
                 const SizedBox(height: 32),
 
                 // Upcoming Session (Anchored on the "Path") - REMOVED FROM HERE
-                
-
                 const SizedBox(height: 12),
-                
+
                 // Transition 3: Body Needs
                 _buildTransitionLabel('YOUR BODY NEEDS ATTENTION HERE'),
 
@@ -156,97 +163,105 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 32),
 
-              // Transition 4: Therapies
-              _buildTransitionLabel('BASED ON YOUR CURRENT CONDITION'),
+                // Transition 4: Therapies
+                _buildTransitionLabel('BASED ON YOUR CURRENT CONDITION'),
 
-              const SizedBox(height: 8),
+                const SizedBox(height: 8),
 
-              // Recommended Therapies (Dynamic)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Recommended Therapies',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF2B4236),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        MainNavigation.setIndex(context, 1);
-                      },
-                      child: const Text(
-                        'See All',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF2B4236),
+                // Recommended Therapies (Dynamic)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Recommended Therapies',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF2B4236),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-
-              _buildRecommendedTherapies(),
-
-              const SizedBox(height: 20),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Essential Wellness',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF2B4236),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        MainNavigation.setIndex(context, 2);
-                      },
-                      child: const Text(
-                        'Shop More',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF2B4236),
+                      TextButton(
+                        onPressed: () {
+                          MainNavigation.setIndex(context, 1);
+                        },
+                        child: const Text(
+                          'See All',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF2B4236),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
+                const SizedBox(height: 8),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _buildProductCard(
-                        'assets/images/product_oil.png',
-                        'Lavender Calm Oil',
-                        '₹450',
+                _buildRecommendedTherapies(),
+
+                const SizedBox(height: 20),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Essential Wellness',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF2B4236),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _buildProductCard(
-                        'assets/images/product_wellness.png',
-                        'Reflective Journal',
-                        '₹300',
+                      TextButton(
+                        onPressed: () {
+                          MainNavigation.setIndex(context, 2);
+                        },
+                        child: const Text(
+                          'Shop More',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF2B4236),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildProductCard(
+                          'assets/images/product_oil.png',
+                          'Lavender Calm Oil',
+                          '₹450',
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildProductCard(
+                          'assets/images/product_wellness.png',
+                          'Reflective Journal',
+                          '₹300',
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -268,7 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
           fontSize: 10,
           fontWeight: FontWeight.w800,
           letterSpacing: 1.5,
-          color: const Color(0xFF2B4236).withValues(alpha: 0.5),
+          color: const Color(0xFF2B4236).withAlpha(128),
         ),
       ),
     );
@@ -283,10 +298,10 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF2B4236).withValues(alpha: 0.05),
+            color: const Color(0xFF2B4236).withAlpha(13),
             blurRadius: 20,
             offset: const Offset(0, 10),
-          )
+          ),
         ],
       ),
       child: ElevatedButton.icon(
@@ -297,7 +312,10 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
         icon: const Icon(Icons.assignment, color: Colors.white),
-        label: const Text('Log Daily Assessment', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        label: const Text(
+          'Log Daily Assessment',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF2B4236),
           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -332,11 +350,11 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Center(
               child: Text(
                 'No sessions booked yet',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF6B8E67),
-                  ),
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF6B8E67),
+                ),
               ),
             ),
           );
@@ -365,7 +383,7 @@ class _HomeScreenState extends State<HomeScreen> {
         final therapies = snapshot.data!.take(3).toList();
 
         return SizedBox(
-          height: 180,
+          height: Responsive.ph(context, 22), // Dynamic height
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             scrollDirection: Axis.horizontal,
@@ -374,8 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (context, index) {
               final therapy = therapies[index];
               return _buildTherapyCard(
-                therapy
-                    .imageUrl, // Assuming imageUrl exists, or use default local
+                therapy.imageUrl,
                 therapy.name,
                 therapy.description,
                 4.8,
@@ -388,41 +405,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  static Widget _buildQuickAction(
-    IconData icon,
-    String label,
-    VoidCallback onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: const Color(0xFFE4E8D8),
-              border: Border.all(color: const Color(0xFF2B4236).withValues(alpha: 0.1), width: 1.5),
-            ),
-            child: Icon(icon, size: 26, color: const Color(0xFF2B4236)),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF2B4236),
-              height: 1.3,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   static Widget _buildTherapyCard(
     String imagePath,
     String title,
@@ -430,103 +412,120 @@ class _HomeScreenState extends State<HomeScreen> {
     double rating,
     int reviews,
   ) {
-    return Container(
-      width: 180,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: Stack(
-          children: [
-            // Background Image
-            SizedBox(
-              width: double.infinity,
-              height: double.infinity,
-              child: imagePath.startsWith('http')
-                  ? Image.network(imagePath, fit: BoxFit.cover)
-                  : Image.asset(imagePath, fit: BoxFit.cover, errorBuilder: (_, __, ___) => Container(color: Colors.grey)),
-            ),
-            // Gradient Overlay
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.8),
-                  ],
-                  stops: const [0.4, 1.0],
-                ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          width: 180,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withAlpha(25),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
               ),
-            ),
-            // Content
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.white.withOpacity(0.5)),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: Stack(
+              children: [
+                // Background Image
+                SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: imagePath.startsWith('http')
+                      ? Image.network(imagePath, fit: BoxFit.cover)
+                      : Image.asset(
+                          imagePath,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) =>
+                              Container(color: Colors.grey),
                         ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.star, size: 14, color: Colors.white),
-                            const SizedBox(width: 4),
-                            Text(
-                              '$rating',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                ),
+                // Gradient Overlay
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.transparent, Colors.black.withAlpha(204)],
+                      stops: const [0.4, 1.0],
+                    ),
+                  ),
+                ),
+                // Content
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withAlpha(51),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Colors.white.withAlpha(128),
                               ),
                             ),
-                          ],
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.star,
+                                  size: 14,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '$rating',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        description,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white.withAlpha(204),
+                          fontSize: 11,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    description,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -546,16 +545,19 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Image.asset(
-              imagePath,
-              height: 130,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) =>
-                  Container(height: 130, color: Colors.grey[200]),
+            child: AspectRatio(
+              aspectRatio: 1.4,
+              child: Image.asset(
+                imagePath,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) =>
+                    Container(color: Colors.grey[200]),
+              ),
             ),
           ),
           Padding(

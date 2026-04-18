@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ruh_care/models/course.dart';
 import 'package:ruh_care/models/enrolled_course.dart';
 
@@ -21,7 +22,7 @@ class CourseService {
       }
       return null;
     } catch (e) {
-      print('Error fetching course: $e');
+      debugPrint('Error fetching course: $e');
       return null;
     }
   }

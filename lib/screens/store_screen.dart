@@ -7,6 +7,7 @@ import 'package:ruh_care/services/wishlist_service.dart';
 import 'package:ruh_care/screens/wishlist_screen.dart';
 import 'package:ruh_care/services/product_service.dart';
 import 'package:ruh_care/helpers/sample_data_helper.dart';
+import 'package:ruh_care/helpers/responsive_helper.dart';
 
 class StoreScreen extends StatefulWidget {
   const StoreScreen({super.key});
@@ -92,7 +93,7 @@ class _StoreScreenState extends State<StoreScreen> {
               ),
             ),
           ),
-          
+
           // Floating View Cart Bar
           Positioned(
             bottom: 16,
@@ -119,29 +120,39 @@ class _StoreScreenState extends State<StoreScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Wellness Store',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w900,
-                color: _deepGreen,
-                letterSpacing: -0.5,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Wellness Store',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w900,
+                  color: _deepGreen,
+                  letterSpacing: -0.5,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-            Text(
-              'Natural products for your health',
-              style: TextStyle(fontSize: 13, color: _deepGreen.withOpacity(0.5)),
-            ),
-          ],
+              Text(
+                'Natural products for your health',
+                style: TextStyle(fontSize: 13, color: _deepGreen.withAlpha(128)),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             _buildRoundIconButton(
               icon: Icons.favorite_border,
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const WishlistScreen())),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const WishlistScreen()),
+              ),
               badgeCountGetter: () => WishlistService().items.length,
               badgeColor: Colors.redAccent,
               listenable: WishlistService(),
@@ -149,7 +160,10 @@ class _StoreScreenState extends State<StoreScreen> {
             const SizedBox(width: 12),
             _buildRoundIconButton(
               icon: Icons.shopping_cart_outlined,
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen())),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CartScreen()),
+              ),
               badgeCountGetter: () => CartService().totalItems,
               badgeColor: Colors.redAccent,
               listenable: CartService(),
@@ -159,7 +173,6 @@ class _StoreScreenState extends State<StoreScreen> {
       ],
     );
   }
-
   Widget _buildRoundIconButton({
     required IconData icon,
     required VoidCallback onTap,
@@ -191,7 +204,11 @@ class _StoreScreenState extends State<StoreScreen> {
                   ),
                   child: Text(
                     '$count',
-                    style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 8,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -208,11 +225,14 @@ class _StoreScreenState extends State<StoreScreen> {
       style: TextStyle(color: _deepGreen),
       decoration: InputDecoration(
         hintText: 'Search products...',
-        hintStyle: TextStyle(fontSize: 14, color: _deepGreen.withOpacity(0.3)),
-        prefixIcon: Icon(Icons.search, color: _deepGreen.withOpacity(0.5)),
+        hintStyle: TextStyle(fontSize: 14, color: _deepGreen.withAlpha(77)),
+        prefixIcon: Icon(Icons.search, color: _deepGreen.withAlpha(128)),
         filled: true,
         fillColor: const Color(0xFFF1F3EC),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -222,11 +242,8 @@ class _StoreScreenState extends State<StoreScreen> {
   }
 
   Widget _buildLoading() {
-    return Center(
-      child: CircularProgressIndicator(color: _deepGreen),
-    );
+    return Center(child: CircularProgressIndicator(color: _deepGreen));
   }
-
   Widget _buildProductGrid() {
     return StreamBuilder<List<Product>>(
       key: ValueKey(_streamKey),
@@ -245,13 +262,15 @@ class _StoreScreenState extends State<StoreScreen> {
           _filteredProducts = _allProducts;
         }
 
+        final isSmall = Responsive.isSmallScreen(context);
+
         return GridView.builder(
-          padding: const EdgeInsets.only(bottom: 80),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+          padding: const EdgeInsets.only(bottom: 80, top: 4),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: isSmall ? 1 : 2,
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
-            childAspectRatio: 0.7, 
+            childAspectRatio: isSmall ? 1.2 : 0.7, // Better ratio for 1-col
           ),
           itemCount: _filteredProducts.length,
           itemBuilder: (context, index) {
@@ -267,7 +286,11 @@ class _StoreScreenState extends State<StoreScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.inventory_2_outlined, size: 64, color: _deepGreen.withOpacity(0.1)),
+          Icon(
+            Icons.inventory_2_outlined,
+            size: 64,
+            color: _deepGreen.withAlpha(25),
+          ),
           const SizedBox(height: 16),
           const Text('No products found', style: TextStyle(color: Colors.grey)),
         ],
@@ -276,13 +299,19 @@ class _StoreScreenState extends State<StoreScreen> {
   }
 
   Widget _buildProductCard(Product product) {
+    final isSmall = Responsive.isSmallScreen(context);
+    
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFF0F0EE)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 4, offset: const Offset(0, 2)),
+          BoxShadow(
+            color: Colors.black.withAlpha(2),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
         ],
       ),
       child: ClipRRect(
@@ -298,74 +327,109 @@ class _StoreScreenState extends State<StoreScreen> {
                 ),
               ).then((_) => setState(() {}));
             },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 12,
-                  child: Hero(
-                    tag: 'product_image_${product.id}',
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          decoration: const BoxDecoration(color: Color(0xFFF1F3EC)),
-                          child: Image.asset(
-                            product.imagePath,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => 
-                                const Icon(Icons.image_not_supported, color: Colors.grey, size: 16),
-                          ),
-                        ),
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: _buildWishlistButton(product),
-                        ),
-                      ],
+            child: isSmall 
+              ? Row(
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: _buildProductImage(product),
                     ),
-                  ),
+                    Expanded(
+                      flex: 6,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: _buildProductInfo(product),
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 12,
+                      child: _buildProductImage(product),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: _buildProductInfo(product),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        product.name,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: _deepGreen,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        product.size,
-                        style: const TextStyle(fontSize: 10, color: Color(0xFF6B8E67), fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '₹${product.price.toInt()}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w900,
-                          color: _deepGreen,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      _buildAddToCartButton(product),
-                    ],
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildProductImage(Product product) {
+    return Hero(
+      tag: 'product_image_${product.id}',
+      child: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              color: Color(0xFFF1F3EC),
+            ),
+            child: Image.asset(
+              product.imagePath,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(
+                    Icons.image_not_supported,
+                    color: Colors.grey,
+                    size: 16,
+                  ),
+            ),
+          ),
+          Positioned(
+            top: 8,
+            right: 8,
+            child: _buildWishlistButton(product),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductInfo(Product product) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          product.name,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: _deepGreen,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 2),
+        Text(
+          product.size,
+          style: const TextStyle(
+            fontSize: 10,
+            color: Color(0xFF6B8E67),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          '₹${product.price.toInt()}',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w900,
+            color: _deepGreen,
+          ),
+        ),
+        const SizedBox(height: 10),
+        _buildAddToCartButton(product),
+      ],
     );
   }
 
@@ -379,7 +443,7 @@ class _StoreScreenState extends State<StoreScreen> {
           child: Container(
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withAlpha(230),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -414,9 +478,7 @@ class _StoreScreenState extends State<StoreScreen> {
           foregroundColor: Colors.white,
           elevation: 0,
           padding: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: const Text(
           'Add to Cart',
@@ -428,14 +490,21 @@ class _StoreScreenState extends State<StoreScreen> {
 
   Widget _buildFloatingCartBar() {
     return GestureDetector(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen())),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const CartScreen()),
+      ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: _deepGreen,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 5)),
+            BoxShadow(
+              color: Colors.black.withAlpha(25),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
           ],
         ),
         child: Row(
@@ -446,8 +515,21 @@ class _StoreScreenState extends State<StoreScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('View cart', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-                Text('${CartService().totalItems} Items', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12)),
+                const Text(
+                  'View cart',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  '${CartService().totalItems} Items',
+                  style: TextStyle(
+                    color: Colors.white.withAlpha(204),
+                    fontSize: 12,
+                  ),
+                ),
               ],
             ),
             const Spacer(),

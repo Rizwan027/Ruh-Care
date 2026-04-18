@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class WellnessJourneyPath extends StatelessWidget {
   final double height;
-  
+
   const WellnessJourneyPath({super.key, required this.height});
 
   @override
@@ -10,9 +10,7 @@ class WellnessJourneyPath extends StatelessWidget {
     return SizedBox(
       width: 40,
       height: height,
-      child: CustomPaint(
-        painter: PathPainter(),
-      ),
+      child: CustomPaint(painter: PathPainter()),
     );
   }
 }
@@ -21,7 +19,7 @@ class PathPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFF2B4236).withValues(alpha: 0.1)
+      ..color = const Color(0xFF2B4236).withAlpha(25)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round;
@@ -33,8 +31,7 @@ class PathPainter extends CustomPainter {
     while (startY < size.height) {
       // Draw a simple wavy segment
       final double endY = startY + dashHeight;
-      final double offset = (startY / size.height) * 20; // Subtle curve
-      
+
       canvas.drawLine(
         Offset(size.width / 2 + (startY % 40 < 20 ? 5 : -5), startY),
         Offset(size.width / 2 + (endY % 40 < 20 ? 5 : -5), endY),

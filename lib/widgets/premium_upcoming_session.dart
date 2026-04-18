@@ -75,11 +75,15 @@ class PremiumUpcomingSession extends StatelessWidget {
             children: [
               const Icon(Icons.calendar_today, size: 14, color: Colors.white70),
               const SizedBox(width: 6),
-              Text(
-                '${booking.date} • ${booking.time}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.white70,
+              Expanded(
+                child: Text(
+                  '${booking.date} • ${booking.time}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white70,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],

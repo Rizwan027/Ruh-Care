@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ruh_care/models/therapy.dart';
 
 class TherapyService {
@@ -35,7 +36,7 @@ class TherapyService {
       }
       return null;
     } catch (e) {
-      print('Error fetching therapy: $e');
+      debugPrint('Error fetching therapy: $e');
       return null;
     }
   }

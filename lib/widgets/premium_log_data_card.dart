@@ -14,7 +14,7 @@ class PremiumLogDataCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF2B4236).withValues(alpha: 0.08),
+            color: const Color(0xFF2B4236).withAlpha(20),
             blurRadius: 30,
             offset: const Offset(0, 15),
           ),
@@ -27,10 +27,14 @@ class PremiumLogDataCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2B4236).withValues(alpha: 0.05),
+                  color: const Color(0xFF2B4236).withAlpha(12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.edit_note, color: Color(0xFF2B4236), size: 24),
+                child: const Icon(
+                  Icons.edit_note,
+                  color: Color(0xFF2B4236),
+                  size: 24,
+                ),
               ),
               const SizedBox(width: 16),
               const Expanded(
@@ -49,7 +53,7 @@ class PremiumLogDataCard extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       'How are you feeling today?',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: Color(0xFF2B4236),

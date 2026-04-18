@@ -87,17 +87,26 @@ class _BodyFocusPreviewState extends State<BodyFocusPreview> with SingleTickerPr
                   onPressed: () {},
                   style: TextButton.styleFrom(padding: EdgeInsets.zero),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        'View detailed pain map',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF6B8E67),
+                      const Flexible(
+                        child: Text(
+                          'View detailed pain map',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF6B8E67),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Icon(Icons.arrow_forward, size: 14, color: const Color(0xFF6B8E67)),
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.arrow_forward,
+                        size: 14,
+                        color: Color(0xFF6B8E67),
+                      ),
                     ],
                   ),
                 ),

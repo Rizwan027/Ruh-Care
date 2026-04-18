@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ruh_care/services/auth_service.dart';
+import 'package:ruh_care/helpers/responsive_helper.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -107,6 +108,9 @@ class _SignupScreenState extends State<SignupScreen>
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = Responsive.height(context);
+    final hSpacer = screenHeight * 0.025;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF1F3EC),
       body: FadeTransition(
@@ -147,7 +151,7 @@ class _SignupScreenState extends State<SignupScreen>
                   ],
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: hSpacer),
 
                 // Icon
                 Center(
@@ -170,7 +174,7 @@ class _SignupScreenState extends State<SignupScreen>
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: hSpacer),
 
                 // Create Account heading
                 const Text(
@@ -196,7 +200,7 @@ class _SignupScreenState extends State<SignupScreen>
                   ),
                 ),
 
-                const SizedBox(height: 30),
+                SizedBox(height: hSpacer * 1.5),
 
                 // Full Name
                 _buildLabel('Full Name'),
@@ -208,7 +212,7 @@ class _SignupScreenState extends State<SignupScreen>
                   enabled: !_isLoading,
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
 
                 // Email
                 _buildLabel('Email Address'),
@@ -221,7 +225,7 @@ class _SignupScreenState extends State<SignupScreen>
                   enabled: !_isLoading,
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
 
                 // Password
                 _buildLabel('Password'),
@@ -235,7 +239,7 @@ class _SignupScreenState extends State<SignupScreen>
                       setState(() => _obscurePassword = !_obscurePassword),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
 
                 // Confirm Password
                 _buildLabel('Confirm Password'),
@@ -250,7 +254,7 @@ class _SignupScreenState extends State<SignupScreen>
                   ),
                 ),
 
-                const SizedBox(height: 30),
+                SizedBox(height: hSpacer * 1.5),
 
                 // Create Account button
                 SizedBox(
@@ -297,7 +301,7 @@ class _SignupScreenState extends State<SignupScreen>
                   ),
                 ),
 
-                const SizedBox(height: 28),
+                SizedBox(height: hSpacer),
 
                 // "Or continue with" divider
                 Row(
@@ -347,28 +351,21 @@ class _SignupScreenState extends State<SignupScreen>
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.network(
-                              'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg',
-                              height: 20,
-                              width: 20,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.g_mobiledata,
-                                  size: 24,
-                                  color: Colors.red,
-                                );
-                              },
+                            Icon(
+                              Icons.g_mobiledata,
+                              size: 24,
+                              color: Colors.red,
                             ),
-                            const SizedBox(width: 10),
-                            const Text(
+                            SizedBox(width: 10),
+                            Text(
                               'Google',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF2D3436),
+                                color: Color(0xFF2B4236),
                               ),
                             ),
                           ],
@@ -393,28 +390,21 @@ class _SignupScreenState extends State<SignupScreen>
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.network(
-                              'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
-                              height: 20,
-                              width: 20,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.apple,
-                                  size: 24,
-                                  color: Colors.black,
-                                );
-                              },
+                            Icon(
+                              Icons.apple,
+                              size: 24,
+                              color: Colors.black,
                             ),
-                            const SizedBox(width: 10),
-                            const Text(
+                            SizedBox(width: 10),
+                            Text(
                               'Apple',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF2D3436),
+                                color: Color(0xFF2B4236),
                               ),
                             ),
                           ],
@@ -424,7 +414,7 @@ class _SignupScreenState extends State<SignupScreen>
                   ],
                 ),
 
-                const SizedBox(height: 28),
+                SizedBox(height: hSpacer),
 
                 // Already have account
                 Row(
@@ -452,7 +442,7 @@ class _SignupScreenState extends State<SignupScreen>
                   ],
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: hSpacer),
 
                 // Bottom decorative gradient line
                 Container(

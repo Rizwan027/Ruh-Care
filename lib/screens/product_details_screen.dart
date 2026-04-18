@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ruh_care/models/product.dart';
 import 'package:ruh_care/services/cart_service.dart';
-import 'package:ruh_care/services/wishlist_service.dart';
-import 'package:ruh_care/services/product_service.dart';
+import 'package:ruh_care/helpers/responsive_helper.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final Product product;
@@ -16,13 +15,14 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int quantity = 1;
   int selectedUnitIndex = 0;
-  final ProductService _productService = ProductService();
-  
+
   // Brand green
   final Color _deepGreen = const Color(0xFF2B4236);
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = Responsive.height(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -31,12 +31,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             slivers: [
               // 1. App Bar with Image
               SliverAppBar(
-                expandedHeight: 350,
+                expandedHeight: screenHeight * 0.4, // Responsive height
                 backgroundColor: Colors.white,
                 elevation: 0,
                 pinned: true,
                 leading: IconButton(
-                  icon: Icon(Icons.arrow_back_ios_new, color: _deepGreen, size: 20),
+                  icon: Icon(
+                    Icons.arrow_back_ios_new,
+                    color: _deepGreen,
+                    size: 20,
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
                 flexibleSpace: FlexibleSpaceBar(
@@ -48,7 +52,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       child: Image.asset(
                         widget.product.imagePath,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported, color: Colors.grey),
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey,
+                            ),
                       ),
                     ),
                   ),
@@ -74,6 +82,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 fontSize: 22,
                                 fontWeight: FontWeight.w900,
                               ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -96,44 +106,79 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           const SizedBox(width: 4),
                           Text(
                             '4.5',
-                            style: TextStyle(color: _deepGreen, fontWeight: FontWeight.bold, fontSize: 14),
+                            style: TextStyle(
+                              color: _deepGreen,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            '(7 reviews)',
-                            style: TextStyle(color: _deepGreen.withOpacity(0.5), fontSize: 12),
+                          Expanded(
+                            child: Text(
+                              '(7 reviews)',
+                              style: TextStyle(
+                                color: _deepGreen.withAlpha(128),
+                                fontSize: 12,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 4),
                       Text(
                         widget.product.size,
-                        style: const TextStyle(color: Color(0xFF6B8E67), fontWeight: FontWeight.bold, fontSize: 13),
+                        style: const TextStyle(
+                          color: Color(0xFF6B8E67),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
                       ),
                       const SizedBox(height: 24),
 
                       // Description
                       const Text(
                         'Description',
-                        style: TextStyle(color: Color(0xFF2B4236), fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: Color(0xFF2B4236),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         widget.product.description,
-                        style: TextStyle(color: _deepGreen.withOpacity(0.7), fontSize: 14, height: 1.5),
+                        style: TextStyle(
+                          color: _deepGreen.withAlpha(179),
+                          fontSize: 14,
+                          height: 1.5,
+                        ),
                       ),
                       const SizedBox(height: 32),
 
                       // Customer Reviews
                       const Text(
                         'Customer Reviews',
-                        style: TextStyle(color: Color(0xFF2B4236), fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: Color(0xFF2B4236),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 16),
-                      _buildReviewCard('Sarah K.', 'Absolutely love this! It has completely changed my daily morning routine. Tastes incredibly natural.', 5),
+                      _buildReviewCard(
+                        'Sarah K.',
+                        'Absolutely love this! It has completely changed my daily morning routine. Tastes incredibly natural.',
+                        5,
+                      ),
                       const SizedBox(height: 12),
-                      _buildReviewCard('Ahmed M.', 'Great quality and fast delivery. Very satisfying.', 5),
-                      
+                      _buildReviewCard(
+                        'Ahmed M.',
+                        'Great quality and fast delivery. Very satisfying.',
+                        5,
+                      ),
+
                       const SizedBox(height: 120), // Bottom padding
                     ],
                   ),
@@ -143,10 +188,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
 
           // 3. Sticky Bottom Bar
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _buildBottomBar(),
-          ),
+          Align(alignment: Alignment.bottomCenter, child: _buildBottomBar()),
         ],
       ),
     );
@@ -166,9 +208,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(name, style: TextStyle(color: _deepGreen, fontWeight: FontWeight.bold, fontSize: 14)),
+              Expanded(
+                child: Text(
+                  name,
+                  style: TextStyle(
+                    color: _deepGreen,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               Row(
-                children: List.generate(5, (index) => Icon(Icons.star, size: 12, color: index < rating ? Colors.amber : Colors.grey.shade300)),
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(
+                  5,
+                  (index) => Icon(
+                    Icons.star,
+                    size: 12,
+                    color: index < rating ? Colors.amber : Colors.grey.shade300,
+                  ),
+                ),
               ),
             ],
           ),
@@ -177,11 +238,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             children: [
               const Icon(Icons.verified, size: 12, color: Color(0xFF6B8E67)),
               const SizedBox(width: 4),
-              Text('Verified Purchase', style: TextStyle(color: const Color(0xFF6B8E67), fontSize: 11, fontWeight: FontWeight.w600)),
+              Text(
+                'Verified Purchase',
+                style: TextStyle(
+                  color: const Color(0xFF6B8E67),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
-          Text(comment, style: TextStyle(color: _deepGreen.withOpacity(0.7), fontSize: 13, height: 1.4)),
+          Text(
+            comment,
+            style: TextStyle(
+              color: _deepGreen.withAlpha(179),
+              fontSize: 13,
+              height: 1.4,
+            ),
+          ),
         ],
       ),
     );
@@ -193,7 +268,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -4)),
+          BoxShadow(
+            color: Colors.black.withAlpha(12),
+            blurRadius: 10,
+            offset: const Offset(0, -4),
+          ),
         ],
       ),
       child: SafeArea(
@@ -203,23 +282,36 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             // Quantity Selector
             Container(
               height: 48,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               decoration: BoxDecoration(
                 color: const Color(0xFFF1F3EC),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildQtyBtn(Icons.remove, () => setState(() => quantity = quantity > 1 ? quantity - 1 : 1)),
+                  _buildQtyBtn(
+                    Icons.remove,
+                    () => setState(
+                      () => quantity = quantity > 1 ? quantity - 1 : 1,
+                    ),
+                  ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('$quantity', style: TextStyle(color: _deepGreen, fontWeight: FontWeight.bold, fontSize: 16)),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text(
+                      '$quantity',
+                      style: TextStyle(
+                        color: _deepGreen,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                   _buildQtyBtn(Icons.add, () => setState(() => quantity++)),
                 ],
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 12),
             // Add to Cart
             Expanded(
               child: SizedBox(
@@ -237,9 +329,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _deepGreen,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  child: const Text('Add to Cart', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: const FittedBox(
+                    child: Text(
+                      'Add to Cart',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),

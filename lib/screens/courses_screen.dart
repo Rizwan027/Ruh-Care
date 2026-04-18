@@ -221,36 +221,39 @@ class _CoursesScreenState extends State<CoursesScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.access_time,
-                      size: 16,
-                      color: Color(0xFF2B4236),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${course.duration} weeks',
-                      style: const TextStyle(
-                        fontSize: 13,
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time,
+                        size: 14,
                         color: Color(0xFF2B4236),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    const Icon(
-                      Icons.currency_rupee,
-                      size: 16,
-                      color: Color(0xFF2B4236),
-                    ),
-                    Text(
-                      '${course.price.toInt()}',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(width: 4),
+                      Text(
+                        '${course.duration} weeks',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF2B4236),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Icon(
+                        Icons.currency_rupee,
+                        size: 14,
                         color: Color(0xFF2B4236),
                       ),
-                    ),
-                  ],
+                      Text(
+                        '${course.price.toInt()}',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF2B4236),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 16),
                 if (course.modules.isNotEmpty) ...[

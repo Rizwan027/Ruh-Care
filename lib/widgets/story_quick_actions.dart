@@ -84,10 +84,10 @@ class StoryQuickActions extends StatelessWidget {
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: (action['gradient'][0] as Color).withOpacity(0.3),
+                        color: (action['gradient'][0] as Color).withAlpha(77),
                         blurRadius: 16,
                         offset: const Offset(0, 8),
-                      )
+                      ),
                     ],
                   ),
                   child: Column(
@@ -96,7 +96,7 @@ class StoryQuickActions extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withAlpha(51),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -117,7 +117,7 @@ class StoryQuickActions extends StatelessWidget {
                       Text(
                         action['subtitle'],
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withAlpha(204),
                           fontSize: 10,
                         ),
                       ),

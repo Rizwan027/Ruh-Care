@@ -14,10 +14,12 @@ class InteractiveWellnessCompass extends StatefulWidget {
   });
 
   @override
-  State<InteractiveWellnessCompass> createState() => _InteractiveWellnessCompassState();
+  State<InteractiveWellnessCompass> createState() =>
+      _InteractiveWellnessCompassState();
 }
 
-class _InteractiveWellnessCompassState extends State<InteractiveWellnessCompass> with SingleTickerProviderStateMixin {
+class _InteractiveWellnessCompassState extends State<InteractiveWellnessCompass>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -53,7 +55,9 @@ class _InteractiveWellnessCompassState extends State<InteractiveWellnessCompass>
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        const Color(0xFF6B7B3A).withOpacity(0.04 + (0.01 * sin(_controller.value * 2 * pi))),
+                        const Color(0xFF6B7B3A).withAlpha(
+                          10 + (sin(_controller.value * 2 * pi) * 2.5).toInt(),
+                        ),
                         Colors.transparent,
                       ],
                     ),
@@ -61,14 +65,17 @@ class _InteractiveWellnessCompassState extends State<InteractiveWellnessCompass>
                 );
               },
             ),
-            
+
             // Main Compass Ring
             Container(
               width: 200,
               height: 200,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFFE4E8D8).withOpacity(0.4), width: 1),
+                border: Border.all(
+                  color: const Color(0xFFE4E8D8).withAlpha(102),
+                  width: 1,
+                ),
               ),
               child: CustomPaint(
                 painter: CompassPainter(
@@ -80,7 +87,7 @@ class _InteractiveWellnessCompassState extends State<InteractiveWellnessCompass>
                 child: Container(),
               ),
             ),
-            
+
             // Center Info Plate
             Container(
               width: 110,
@@ -90,7 +97,7 @@ class _InteractiveWellnessCompassState extends State<InteractiveWellnessCompass>
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF6B7B3A).withOpacity(0.08),
+                    color: const Color(0xFF6B7B3A).withAlpha(20),
                     blurRadius: 20,
                     offset: const Offset(0, 4),
                   ),
@@ -133,7 +140,11 @@ class _InteractiveWellnessCompassState extends State<InteractiveWellnessCompass>
             Positioned(
               top: 30,
               right: 20,
-              child: _buildMetricNode('STRESS', widget.stress, Colors.orangeAccent),
+              child: _buildMetricNode(
+                'STRESS',
+                widget.stress,
+                Colors.orangeAccent,
+              ),
             ),
             Positioned(
               bottom: 30,
@@ -153,7 +164,11 @@ class _InteractiveWellnessCompassState extends State<InteractiveWellnessCompass>
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withAlpha(10),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Row(
@@ -197,17 +212,20 @@ class CompassPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
-    
+
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 3;
 
     // Background Score Arc
-    paint.color = const Color(0xFFE4E8D8).withOpacity(0.5);
+    paint.color = const Color(0xFFE4E8D8).withAlpha(128);
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius - 8),
-      0, 2 * pi, false, paint,
+      0,
+      2 * pi,
+      false,
+      paint,
     );
 
     // Dynamic Score Arc
@@ -222,12 +240,18 @@ class CompassPainter extends CustomPainter {
 
     // Static Ticks
     paint.strokeWidth = 1;
-    paint.color = const Color(0xFF6B7B3A).withOpacity(0.2);
+    paint.color = const Color(0xFF6B7B3A).withAlpha(51);
     for (var i = 0; i < 60; i++) {
       final angle = (i * (360 / 60)) * pi / 180;
       final length = i % 5 == 0 ? 12.0 : 6.0;
-      final p1 = Offset(center.dx + radius * cos(angle), center.dy + radius * sin(angle));
-      final p2 = Offset(center.dx + (radius - length) * cos(angle), center.dy + (radius - length) * sin(angle));
+      final p1 = Offset(
+        center.dx + radius * cos(angle),
+        center.dy + radius * sin(angle),
+      );
+      final p2 = Offset(
+        center.dx + (radius - length) * cos(angle),
+        center.dy + (radius - length) * sin(angle),
+      );
       canvas.drawLine(p1, p2, paint);
     }
   }

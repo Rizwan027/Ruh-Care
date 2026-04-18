@@ -35,7 +35,13 @@ class _BookingScreenState extends State<BookingScreen> {
   DateTime _combineDateAndTime(DateTime date, String timeStr) {
     final format = DateFormat("hh:mm a");
     final timeDate = format.parse(timeStr);
-    return DateTime(date.year, date.month, date.day, timeDate.hour, timeDate.minute);
+    return DateTime(
+      date.year,
+      date.month,
+      date.day,
+      timeDate.hour,
+      timeDate.minute,
+    );
   }
 
   void _selectDate(BuildContext context) async {
@@ -81,7 +87,10 @@ class _BookingScreenState extends State<BookingScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please login to book a session'), backgroundColor: Colors.red),
+        const SnackBar(
+          content: Text('Please login to book a session'),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
@@ -89,7 +98,10 @@ class _BookingScreenState extends State<BookingScreen> {
     final aptDateTime = _combineDateAndTime(_selectedDate, _selectedTimeSlot!);
     if (aptDateTime.isBefore(DateTime.now())) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cannot book past time slots'), backgroundColor: Colors.red),
+        const SnackBar(
+          content: Text('Cannot book past time slots'),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
@@ -116,7 +128,9 @@ class _BookingScreenState extends State<BookingScreen> {
           context: context,
           barrierDismissible: false,
           builder: (context) => AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
             title: const Text('Booking Confirmed! 🎉'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -124,7 +138,9 @@ class _BookingScreenState extends State<BookingScreen> {
               children: [
                 Text('Therapy: ${widget.therapy.name}'),
                 const SizedBox(height: 8),
-                Text('Date: ${DateFormat('MMM dd, yyyy').format(_selectedDate)}'),
+                Text(
+                  'Date: ${DateFormat('MMM dd, yyyy').format(_selectedDate)}',
+                ),
                 const SizedBox(height: 8),
                 Text('Time: $_selectedTimeSlot'),
                 const SizedBox(height: 8),
@@ -139,7 +155,10 @@ class _BookingScreenState extends State<BookingScreen> {
                   Navigator.pop(context); // Close dialog
                   // Go to Home dashboard to see the upcoming session
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => const MainNavigation(initialIndex: 0)),
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const MainNavigation(initialIndex: 0),
+                    ),
                     (route) => false,
                   );
                 },
@@ -150,9 +169,14 @@ class _BookingScreenState extends State<BookingScreen> {
         );
       }
     } catch (e) {
-      print('Internal Error while booking: $e'); // Log internally
+      debugPrint('Internal Error while booking: $e'); // Log internally
       if (mounted) {
-         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Booking failed. Please try again.'), backgroundColor: Colors.red));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Booking failed. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -342,8 +366,11 @@ class _BookingScreenState extends State<BookingScreen> {
                     itemBuilder: (context, index) {
                       final timeSlot = _timeSlots[index];
                       final isSelected = _selectedTimeSlot == timeSlot;
-                      
-                      final slotDateTime = _combineDateAndTime(_selectedDate, timeSlot);
+
+                      final slotDateTime = _combineDateAndTime(
+                        _selectedDate,
+                        timeSlot,
+                      );
                       final isPast = slotDateTime.isBefore(now);
                       final isDisabled = isPast;
 
@@ -352,7 +379,9 @@ class _BookingScreenState extends State<BookingScreen> {
                             ? () {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('This time slot is no longer available'),
+                                    content: Text(
+                                      'This time slot is no longer available',
+                                    ),
                                     backgroundColor: Colors.red,
                                     duration: Duration(seconds: 1),
                                   ),
@@ -386,7 +415,9 @@ class _BookingScreenState extends State<BookingScreen> {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                decoration: isDisabled ? TextDecoration.lineThrough : null,
+                                decoration: isDisabled
+                                    ? TextDecoration.lineThrough
+                                    : null,
                                 color: isDisabled
                                     ? Colors.grey[400]
                                     : isSelected
@@ -435,19 +466,22 @@ class _BookingScreenState extends State<BookingScreen> {
                 ),
                 elevation: 0,
               ),
-              child: _isLoading 
-                ? const CircularProgressIndicator(color: Colors.white)
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        'Confirm Booking',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(width: 12),
-                      Icon(Icons.check_circle, size: 20),
-                    ],
-                  ),
+              child: _isLoading
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text(
+                          'Confirm Booking',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Icon(Icons.check_circle, size: 20),
+                      ],
+                    ),
             ),
           ),
         ),

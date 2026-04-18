@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class UpdateTherapyPrices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -24,15 +25,15 @@ class UpdateTherapyPrices {
         if (therapyPrices.containsKey(therapyName)) {
           // Update the price field
           await doc.reference.update({'price': therapyPrices[therapyName]});
-          print(
+          debugPrint(
             '✅ Updated price for: $therapyName to ₹${therapyPrices[therapyName]}',
           );
         }
       }
 
-      print('🎉 All therapy prices updated to rupees!');
+      debugPrint('🎉 All therapy prices updated to rupees!');
     } catch (e) {
-      print('❌ Error updating prices: $e');
+      debugPrint('❌ Error updating prices: $e');
     }
   }
 }

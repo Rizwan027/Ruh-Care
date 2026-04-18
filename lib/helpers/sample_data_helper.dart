@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class SampleDataHelper {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -12,7 +13,7 @@ class SampleDataHelper {
       }
       await addSampleProducts();
     } catch (e) {
-      print('Error seeding sample products: $e');
+      debugPrint('Error seeding sample products: $e');
     }
   }
 
@@ -35,9 +36,9 @@ class SampleDataHelper {
           await doc.reference.update({'imagePath': imageMap[name]});
         }
       }
-      print('Product images updated!');
+      debugPrint('Product images updated!');
     } catch (e) {
-      print('Error updating product images: $e');
+      debugPrint('Error updating product images: $e');
     }
   }
 
@@ -208,9 +209,9 @@ class SampleDataHelper {
       for (var product in products) {
         await _firestore.collection('products').add(product);
       }
-      print('Sample products added successfully!');
+      debugPrint('Sample products added successfully!');
     } catch (e) {
-      print('Error adding sample products: $e');
+      debugPrint('Error adding sample products: $e');
     }
   }
 
@@ -222,7 +223,7 @@ class SampleDataHelper {
       }
       await addSampleTherapies();
     } catch (e) {
-      print('❌ Error seeding sample therapies: $e');
+      debugPrint('❌ Error seeding sample therapies: $e');
     }
   }
 
@@ -369,9 +370,9 @@ class SampleDataHelper {
       for (var therapy in therapies) {
         await _firestore.collection('therapies').add(therapy);
       }
-      print('✅ Sample therapies added successfully!');
+      debugPrint('✅ Sample therapies added successfully!');
     } catch (e) {
-      print('❌ Error adding sample therapies: $e');
+      debugPrint('❌ Error adding sample therapies: $e');
     }
   }
 
@@ -383,7 +384,7 @@ class SampleDataHelper {
       }
       await addSampleCourses();
     } catch (e) {
-      print('Error seeding sample courses: $e');
+      debugPrint('Error seeding sample courses: $e');
     }
   }
 
@@ -444,9 +445,9 @@ class SampleDataHelper {
       for (var course in courses) {
         await _firestore.collection('courses').add(course);
       }
-      print('Sample courses added successfully!');
+      debugPrint('Sample courses added successfully!');
     } catch (e) {
-      print('Error adding sample courses: $e');
+      debugPrint('Error adding sample courses: $e');
     }
   }
 }

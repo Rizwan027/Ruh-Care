@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ruh_care/screens/signup_screen.dart';
 import 'package:ruh_care/services/auth_service.dart';
+import 'package:ruh_care/helpers/responsive_helper.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -90,6 +91,9 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = Responsive.height(context);
+    final hSpacer = screenHeight * 0.03;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF1F3EC),
       body: FadeTransition(
@@ -100,12 +104,7 @@ class _LoginScreenState extends State<LoginScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 8),
-
-                // Top bar: close button + title
-                // Removed Ruh-Care title from here as requested
-
-                const SizedBox(height: 28),
+                SizedBox(height: screenHeight * 0.05),
 
                 // Leaf icon
                 Center(
@@ -128,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen>
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: hSpacer),
 
                 // Welcome Back
                 const Text(
@@ -155,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen>
                   ),
                 ),
 
-                const SizedBox(height: 36),
+                SizedBox(height: hSpacer * 1.5),
 
                 // Email / Phone label
                 const Text(
@@ -218,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen>
                   ),
                 ),
 
-                const SizedBox(height: 22),
+                const SizedBox(height: 16),
 
                 // Password label
                 const Text(
@@ -318,13 +317,13 @@ class _LoginScreenState extends State<LoginScreen>
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: const Color(0xFF2B4236),
+                        color: Color(0xFF2B4236),
                       ),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: hSpacer),
 
                 // Sign In button
                 SizedBox(
@@ -359,7 +358,7 @@ class _LoginScreenState extends State<LoginScreen>
                   ),
                 ),
 
-                const SizedBox(height: 28),
+                SizedBox(height: hSpacer),
 
                 // "Or continue with" divider
                 Row(
@@ -412,17 +411,10 @@ class _LoginScreenState extends State<LoginScreen>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.network(
-                              'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg',
-                              height: 20,
-                              width: 20,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.g_mobiledata,
-                                  size: 24,
-                                  color: Colors.red,
-                                );
-                              },
+                            const Icon(
+                              Icons.g_mobiledata,
+                              size: 24,
+                              color: Colors.red,
                             ),
                             const SizedBox(width: 10),
                             const Text(
@@ -455,23 +447,16 @@ class _LoginScreenState extends State<LoginScreen>
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.network(
-                              'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
-                              height: 20,
-                              width: 20,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.apple,
-                                  size: 24,
-                                  color: Colors.black,
-                                );
-                              },
+                            Icon(
+                              Icons.apple,
+                              size: 24,
+                              color: Colors.black,
                             ),
-                            const SizedBox(width: 10),
-                            const Text(
+                            SizedBox(width: 10),
+                            Text(
                               'Apple',
                               style: TextStyle(
                                 fontSize: 14,
@@ -486,7 +471,7 @@ class _LoginScreenState extends State<LoginScreen>
                   ],
                 ),
 
-                const SizedBox(height: 32),
+                SizedBox(height: hSpacer),
 
                 // Create account link
                 Row(
@@ -520,7 +505,7 @@ class _LoginScreenState extends State<LoginScreen>
                   ],
                 ),
 
-                const SizedBox(height: 30),
+                SizedBox(height: hSpacer),
 
                 // Bottom decorative gradient line
                 Container(
@@ -537,7 +522,7 @@ class _LoginScreenState extends State<LoginScreen>
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
               ],
             ),
           ),
