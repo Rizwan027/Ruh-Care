@@ -1,0 +1,43 @@
+# Ruh-Care MVP Development Roadmap
+
+This checklist tracks the ongoing development of the Ruh-Care Version 1 (MVP) application based on the PRD and TRD.
+
+## Phase 1: UI Foundation
+- [x] Flutter project initialization
+- [x] Splash screen implementation
+- [x] Login & Sign Up Screen UI
+- [x] App bottom navigation bar & skeleton screens
+
+## Phase 2: Firebase Integration & Setup [x]
+- [x] Create Firebase Project (Auth, Firestore, Storage)
+- [x] Integrate Firebase SDK into Flutter (`firebase_core`)
+- [x] Define Firestore Security Rules based on TRD roles
+
+## Phase 3: Authentication (Logic) [x]
+- [x] Implement Firebase Email/Password Authentication
+- [x] Create user profile document in Firestore on signup (role: user)
+- [x] Implement persistent login state & logout functionality
+- [x] Implement role-based routing (Admin vs Doctor vs Patient)
+
+## Phase 4: Patient Features (Discovery & Booking)
+- [ ] **Home Screen (Therapies)**: Fetch and display list of therapies from Firestore
+- [ ] **Therapy Details**: Show benefits, duration, price, and precautions
+- [ ] **Booking Flow - UI**: Date picker and time slot selection
+- [ ] **Booking Flow - Logic**: Save appointment to Firestore & handle double-booking prevention
+
+## Phase 5: Patient Features (E-Commerce Store)
+- [ ] **Store Screen**: Fetch and display wellness products from Firestore
+- [ ] **Product Details**: View product sizes and descriptions
+- [ ] **Shopping Cart**: Add items, adjust quantity, calculate total
+- [ ] **Checkout Flow**: Place order & save to Firestore
+
+## Phase 6: Admin & Doctor Portals
+- [ ] **Doctor Dashboard**: View daily appointment schedule & patient details
+- [ ] **Doctor Actions**: Mark appointments as 'completed'
+- [ ] **Admin Dashboard**: Overview of all bookings, therapy management
+- [ ] **Admin Inventory**: Add/edit products, track clinic supplies
+
+## Phase 7: Polish & Verification
+- [ ] Error handling & empty states across the app
+- [ ] UI/UX polishing and consistent theming
+- [ ] Final manual testing against PRD requirements
